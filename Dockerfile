@@ -88,6 +88,7 @@ COPY sdxl_vae.safetensors /sd-models/sdxl_vae.safetensors
 WORKDIR /
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
     cd /stable-diffusion-webui && \
+    git fetch --tags && \
     git checkout tags/${WEBUI_VERSION}
 
 WORKDIR /stable-diffusion-webui
