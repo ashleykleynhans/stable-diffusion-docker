@@ -79,9 +79,11 @@ RUN mkdir -p /sd-models
 #   wget https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
 #   wget https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors
 #   wget https://huggingface.co/madebyollin/sdxl-vae-fp16-fix/resolve/main/sdxl_vae.safetensors
-COPY sd_xl_base_1.0.safetensors /sd-models/sd_xl_base_1.0.safetensors
-COPY sd_xl_refiner_1.0.safetensors /sd-models/sd_xl_refiner_1.0.safetensors
-COPY sdxl_vae.safetensors /sd-models/sdxl_vae.safetensors
+# COPY sd_xl_base_1.0.safetensors /sd-models/sd_xl_base_1.0.safetensors
+# COPY sd_xl_refiner_1.0.safetensors /sd-models/sd_xl_refiner_1.0.safetensors
+# COPY sdxl_vae.safetensors /sd-models/sdxl_vae.safetensors
+COPY deliberate_v3.safetensors /sd-models/deliberate_v3.safetensors
+COPY vae-ft-mse-840000-ema-pruned.safetensors /sd-models/vae-ft-mse-840000-ema-pruned.safetensors
 
 # Clone the git repo of the Stable Diffusion Web UI by Automatic1111
 # and set version
