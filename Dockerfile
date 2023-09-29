@@ -136,7 +136,6 @@ RUN source /venv/bin/activate && \
     pip3 install -r requirements.txt && \
     cd /stable-diffusion-webui/extensions/adetailer && \
     python -m install && \
-
     deactivate
 
 # Set Dreambooth extension version

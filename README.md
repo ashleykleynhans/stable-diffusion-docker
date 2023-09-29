@@ -58,7 +58,7 @@ git clone https://github.com/RuKapSan/stable-diffusion-docker.git
 cd stable-diffusion-docker
 wget https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned.safetensors
 wget https://huggingface.co/stabilityai/sd-vae-ft-mse-original/resolve/main/vae-ft-mse-840000-ema-pruned.safetensors
-wget https://civitai.com/api/download/models/15236
+wget https://civitai.com/api/download/models/156110
 
 # Build and tag the image
 docker build -t username/image-name:1.0.0 .
