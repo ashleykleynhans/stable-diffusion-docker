@@ -18,45 +18,45 @@ WORKDIR /
 RUN apt update && \
     apt -y upgrade && \
     apt install -y --no-install-recommends \
-        build-essential \
-        software-properties-common \
-        python3.10-venv \
-        python3-pip \
-        python3-tk \
-        python3-dev \
-        nodejs \
-        npm \
-        bash \
-        dos2unix \
-        git \
-        git-lfs \
-        ncdu \
-        nginx \
-        net-tools \
-        inetutils-ping \
-        openssh-server \
-        libglib2.0-0 \
-        libsm6 \
-        libgl1 \
-        libxrender1 \
-        libxext6 \
-        ffmpeg \
-        wget \
-        curl \
-        psmisc \
-        rsync \
-        vim \
-        zip \
-        unzip \
-        p7zip-full \
-        htop \
-        pkg-config \
-        plocate \
-        libcairo2-dev \
-        libgoogle-perftools4 \
-        libtcmalloc-minimal4 \
-        apt-transport-https \
-        ca-certificates && \
+    build-essential \
+    software-properties-common \
+    python3.10-venv \
+    python3-pip \
+    python3-tk \
+    python3-dev \
+    nodejs \
+    npm \
+    bash \
+    dos2unix \
+    git \
+    git-lfs \
+    ncdu \
+    nginx \
+    net-tools \
+    inetutils-ping \
+    openssh-server \
+    libglib2.0-0 \
+    libsm6 \
+    libgl1 \
+    libxrender1 \
+    libxext6 \
+    ffmpeg \
+    wget \
+    curl \
+    psmisc \
+    rsync \
+    vim \
+    zip \
+    unzip \
+    p7zip-full \
+    htop \
+    pkg-config \
+    plocate \
+    libcairo2-dev \
+    libgoogle-perftools4 \
+    libtcmalloc-minimal4 \
+    apt-transport-https \
+    ca-certificates && \
     update-ca-certificates && \
     apt clean && \
     rm -rf /var/lib/apt/lists/* && \
@@ -86,7 +86,7 @@ COPY sdxl_vae.safetensors /sd-models/sdxl_vae.safetensors
 # Clone the git repo of the Stable Diffusion Web UI by Automatic1111
 # and set version
 WORKDIR /
-RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
+RUN git clone https://github.com/RuKapSan/stable-diffusion-webui && \
     cd /stable-diffusion-webui && \
     git checkout tags/${WEBUI_VERSION}
 
@@ -116,19 +116,27 @@ RUN git clone https://github.com/d8ahazard/sd_dreambooth_extension.git extension
     git clone --depth=1 https://github.com/deforum-art/sd-webui-deforum.git extensions/deforum && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     git clone --depth=1 https://github.com/ashleykleynhans/a1111-sd-webui-locon.git extensions/a1111-sd-webui-locon && \
-    git clone --depth=1 https://github.com/ashleykleynhans/sd-webui-roop.git extensions/sd-webui-roop && \
-    git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer
+    git clone --depth=1 https://github.com/RuKapSan/sd-webui-faceswaplab.git extensions/sd-webui-faceswaplab && \
+    git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer \
+    git clone --depth=1 https://github.com/BlafKing/sd-civitai-browser-plus.git extensions/sd-civitai-browser-plus \
+    git clone --depth=1 https://github.com/RuKapSan/stable-diffusion-webui-vectorstudio.git extensions/sd-vectorstudio
 
-# Install dependencies for Deforum, ControlNet, roop, and After Detailer extensions
+
+# Install dependencies for Deforum, ControlNet, faceswaplab, vectorstudio, civitAI and After Detailer extensions
 RUN source /venv/bin/activate && \
     cd /stable-diffusion-webui/extensions/deforum && \
     pip3 install -r requirements.txt && \
     cd /stable-diffusion-webui/extensions/sd-webui-controlnet && \
     pip3 install -r requirements.txt && \
-    cd /stable-diffusion-webui/extensions/sd-webui-roop && \
+    cd /stable-diffusion-webui/extensions/sd-webui-faceswaplab && \
+    pip3 install -r requirements.txt && \
+    cd /stable-diffusion-webui/extensions/sd-civitai-browser-plus && \
+    pip3 install -r requirements.txt && \
+    cd /stable-diffusion-webui/extensions/sd-vectorstudio && \
     pip3 install -r requirements.txt && \
     cd /stable-diffusion-webui/extensions/adetailer && \
     python -m install && \
+
     deactivate
 
 # Set Dreambooth extension version
@@ -145,8 +153,8 @@ RUN source /venv/bin/activate && \
     deactivate
 
 # Add inswapper model for the roop extension
-RUN mkdir -p /workspace/stable-diffusion-webui/models/roop && \
-    cd /workspace/stable-diffusion-webui/models/roop && \
+RUN mkdir -p /workspace/stable-diffusion-webui/models/faceswaplab && \
+    cd /workspace/stable-diffusion-webui/models/faceswaplab && \
     wget https://huggingface.co/ashleykleynhans/inswapper/resolve/main/inswapper_128.onnx
 
 # Fix Tensorboard
@@ -164,11 +172,11 @@ RUN git checkout ${KOHYA_VERSION} && \
     source venv/bin/activate && \
     pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 && \
     pip3 install --no-cache-dir xformers==0.0.21 \
-        bitsandbytes==0.41.1 \
-        tensorboard==2.12.3 \
-        tensorflow==2.12.0 \
-        wheel \
-        tensorrt && \
+    bitsandbytes==0.41.1 \
+    tensorboard==2.12.3 \
+    tensorflow==2.12.0 \
+    wheel \
+    tensorrt && \
     pip3 install -r requirements.txt && \
     pip3 install . && \
     pip3 cache purge && \
@@ -197,10 +205,10 @@ RUN git clone https://github.com/ashleykleynhans/app-manager.git /app-manager &&
 # Install Jupyter
 WORKDIR /
 RUN pip3 install -U --no-cache-dir jupyterlab \
-        jupyterlab_widgets \
-        ipykernel \
-        ipywidgets \
-        gdown
+    jupyterlab_widgets \
+    ipykernel \
+    ipywidgets \
+    gdown
 
 # Install rclone
 RUN curl https://rclone.org/install.sh | bash

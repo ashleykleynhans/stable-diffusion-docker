@@ -52,15 +52,13 @@ any instances with less memory, eg. `t3a.medium`.
 
 ```bash
 # Clone the repo
-git clone https://github.com/ashleykleynhans/stable-diffusion-docker.git
+git clone https://github.com/RuKapSan/stable-diffusion-docker.git
 
 # Download the models
 cd stable-diffusion-docker
 wget https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned.safetensors
 wget https://huggingface.co/stabilityai/sd-vae-ft-mse-original/resolve/main/vae-ft-mse-840000-ema-pruned.safetensors
-wget https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
-wget https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors
-wget https://huggingface.co/madebyollin/sdxl-vae-fp16-fix/resolve/main/sdxl_vae.safetensors
+wget https://civitai.com/api/download/models/15236
 
 # Build and tag the image
 docker build -t username/image-name:1.0.0 .
@@ -95,28 +93,4 @@ docker run -d \
   ashleykza/stable-diffusion-webui:3.1.0
 ```
 
-You can obviously substitute the image name and tag with your own.
 
-## Acknowledgements
-
-1. [RunPod](https://runpod.io?ref=2xxro4sy) for providing most
-   of the [container](https://github.com/runpod/containers) code.
-2. Dr. Furkan Gözükara for his amazing
-   [YouTube videos](https://www.youtube.com/@SECourses/videos]).
-3. [Bernard Maltais](https://github.com/bmaltais) (core developer of Kohya_ss)
-   for assisting with optimizing the Docker image.
-
-## Community and Contributing
-
-Pull requests and issues on [GitHub](https://github.com/ashleykleynhans/stable-diffusion-docker)
-are welcome. Bug fixes and new features are encouraged.
-
-You can contact me and get help with deploying your container
-to RunPod on the RunPod Discord Server below,
-my username is **ashleyk**.
-
-<a target="_blank" href="https://discord.gg/pJ3P2DbUUq">![Discord Banner 2](https://discordapp.com/api/guilds/912829806415085598/widget.png?style=banner2)</a>
-
-## Appreciate my work?
-
-<a href="https://www.buymeacoffee.com/ashleyk" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
