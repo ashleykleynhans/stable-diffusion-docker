@@ -1,7 +1,7 @@
 # Stage 1: Base
 FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04 as base
 
-ARG WEBUI_VERSION=v1.6.0
+ARG WEBUI_VERSION=af617748aa27692947ce7e908ee9841ae72336e0
 ARG DREAMBOOTH_COMMIT=cf086c536b141fc522ff11f6cffc8b7b12da04b9
 ARG KOHYA_VERSION=v21.8.10
 
@@ -90,7 +90,7 @@ COPY vae-ft-mse-840000-ema-pruned.safetensors /sd-models/vae-ft-mse-840000-ema-p
 WORKDIR /
 RUN git clone https://github.com/RuKapSan/stable-diffusion-webui && \
     cd /stable-diffusion-webui && \
-    git checkout tags/${WEBUI_VERSION}
+    git checkout ${WEBUI_VERSION}
 
 WORKDIR /stable-diffusion-webui
 RUN python3 -m venv --system-site-packages /venv && \
