@@ -109,8 +109,7 @@ RUN source /venv/bin/activate && \
 # Cache the Stable Diffusion Models
 # SDXL models result in OOM kills with 8GB system memory, probably need 12GB+ to cache these
 RUN source /venv/bin/activate && \
-    python3 cache-sd-model.py --use-cpu=all --ckpt /sd-models/sd_xl_base_1.0.safetensors && \
-    python3 cache-sd-model.py --use-cpu=all --ckpt /sd-models/sd_xl_refiner_1.0.safetensors && \
+    python3 cache-sd-model.py --use-cpu=all --ckpt /sd-models/deliberate_v3.safetensors && \
     deactivate
 
 # Clone the Automatic1111 Extensions
@@ -119,9 +118,10 @@ RUN git clone https://github.com/d8ahazard/sd_dreambooth_extension.git extension
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     git clone --depth=1 https://github.com/ashleykleynhans/a1111-sd-webui-locon.git extensions/a1111-sd-webui-locon && \
     git clone --depth=1 https://github.com/RuKapSan/sd-webui-faceswaplab.git extensions/sd-webui-faceswaplab && \
-    git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer \
-    git clone --depth=1 https://github.com/BlafKing/sd-civitai-browser-plus.git extensions/sd-civitai-browser-plus \
+    git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
+    git clone --depth=1 https://github.com/BlafKing/sd-civitai-browser-plus.git extensions/sd-civitai-browser-plus && \
     git clone --depth=1 https://github.com/RuKapSan/stable-diffusion-webui-vectorstudio.git extensions/sd-vectorstudio
+
 
 
 # Install dependencies for Deforum, ControlNet, faceswaplab, vectorstudio, civitAI and After Detailer extensions
@@ -130,10 +130,14 @@ RUN source /venv/bin/activate && \
     pip3 install -r requirements.txt && \
     cd /stable-diffusion-webui/extensions/sd-webui-controlnet && \
     pip3 install -r requirements.txt && \
+    deactivate
+
+RUN source /venv/bin/activate && \
     cd /stable-diffusion-webui/extensions/sd-webui-faceswaplab && \
     pip3 install -r requirements.txt && \
-    cd /stable-diffusion-webui/extensions/sd-civitai-browser-plus && \
-    pip3 install -r requirements.txt && \
+    deactivate
+
+RUN source /venv/bin/activate && \
     cd /stable-diffusion-webui/extensions/sd-vectorstudio && \
     pip3 install -r requirements.txt && \
     cd /stable-diffusion-webui/extensions/adetailer && \
@@ -235,7 +239,7 @@ RUN git clone --depth=1 https://github.com/ashleykleynhans/civitai-downloader.gi
 COPY a1111/relauncher.py a1111/webui-user.sh a1111/config.json a1111/ui-config.json /stable-diffusion-webui/
 
 # ADD SDXL styles.csv
-ADD https://raw.githubusercontent.com/Douleb/SDXL-750-Styles-GPT4-/main/styles.csv /stable-diffusion-webui/styles.csv
+ADD https://raw.githubusercontent.com/RuKapSan/SD-styles/main/styles.csv /stable-diffusion-webui/styles.csv
 
 # Copy ComfyUI Extra Model Paths (to share models with A1111)
 COPY comfyui/extra_model_paths.yaml /ComfyUI/
