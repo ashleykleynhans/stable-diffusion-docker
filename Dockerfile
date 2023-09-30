@@ -76,12 +76,10 @@ RUN mkdir -p /sd-models
 
 # Add SD models and VAE
 # These need to already have been downloaded:
-#   wget https://civitai.com/api/download/models/15236
-#   wget https://civitai.com/api/download/models/80869
-# COPY deliberate_v2.safetensors /sd-models/deliberate_v2.safetensors
-# COPY vae-ft-mse-840000-ema-pruned.safetensors /sd-models/vae-ft-mse-840000-ema-pruned.safetensors
+#   wget https://civitai.com/api/download/models/15236 Deliberate
+#   wget https://civitai.com/api/download/models/114076 VAE
 COPY deliberate_v2.safetensors /sd-models/deliberate_v2.safetensors
-COPY vae-ft-mse-840000-ema-pruned.safetensors /sd-models/vae-ft-mse-840000-ema-pruned.safetensors
+COPY matrixVAE_v30.pt /sd-models/matrixVAE_v30.pt
 
 # Clone the git repo of the Stable Diffusion Web UI by Automatic1111
 # and set version
@@ -231,6 +229,7 @@ ADD https://civitai.com/api/download/models/64596 /sd-models/Lora/Color_Icons.sa
 ADD https://civitai.com/api/download/models/96612 /sd-models/Lora/flaticon_v1_2.safetensors
 ADD https://civitai.com/api/download/models/61877 /sd-models/Lora/logo_v1-000012.safetensors
 ADD https://civitai.com/api/download/models/55466 /sd-models/Lora/logogotypes.safetensors
+
 
 # Copy ComfyUI Extra Model Paths (to share models with A1111)
 COPY comfyui/extra_model_paths.yaml /ComfyUI/

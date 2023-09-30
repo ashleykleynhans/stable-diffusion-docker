@@ -22,7 +22,7 @@
 * Torch 2.0.1
 * xformers 0.0.21
 * deliberate_v2.safetensors
-* vae-ft-mse-840000-ema-pruned.safetensors
+* matrixVAE_v30.pt
 * [runpodctl](https://github.com/runpod/runpodctl)
 * [croc](https://github.com/schollz/croc)
 * [rclone](https://rclone.org/)

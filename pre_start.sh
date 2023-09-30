@@ -40,7 +40,9 @@ echo "Fixing ComfyUI venv..."
 
 # Link models and VAE
 ln -s /sd-models/deliberate_v2.safetensors /workspace/stable-diffusion-webui/models/Stable-diffusion/deliberate_v2.safetensors
-ln -s /sd-models/vae-ft-mse-840000-ema-pruned.safetensors /workspace/stable-diffusion-webui/models/VAE/vae-ft-mse-840000-ema-pruned.safetensors
+ln -s /sd-models/matrixVAE_v30.pt /workspace/stable-diffusion-webui/models/VAE/matrixVAE_v30.pt
+ln -s /sd-models/Lora /workspace/stable-diffusion-webui/models/Lora
+
 
 # Configure accelerate
 echo "Configuring accelerate..."

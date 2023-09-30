@@ -23,7 +23,7 @@
 * Torch 2.0.1
 * xformers 0.0.21
 * deliberate_v2.safetensors
-* vae-ft-mse-840000-ema-pruned.safetensors
+* matrixVAE_v30.pt
 * [runpodctl](https://github.com/runpod/runpodctl)
 * [croc](https://github.com/schollz/croc)
 * [rclone](https://rclone.org/)
@@ -51,8 +51,7 @@ git clone https://github.com/RuKapSan/stable-diffusion-docker.git
 
 # Download the models
 cd stable-diffusion-docker
-wget https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned.safetensors
-wget https://huggingface.co/stabilityai/sd-vae-ft-mse-original/resolve/main/vae-ft-mse-840000-ema-pruned.safetensors
+wget https://civitai.com/api/download/models/114076
 wget https://civitai.com/api/download/models/156110
 
 # Build and tag the image
