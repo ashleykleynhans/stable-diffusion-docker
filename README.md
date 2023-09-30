@@ -1,7 +1,5 @@
 # Docker image for A1111 Stable Diffusion Web UI, Kohya_ss and ComfyUI
 
-Now with SDXL support.
-
 ## Installs
 
 * Ubuntu 22.04 LTS
@@ -19,16 +17,13 @@ Now with SDXL support.
   https://github.com/Bing-su/adetailer) v23.9.2
 * [Locon extension](
   https://github.com/ashleykleynhans/a1111-sd-webui-locon)
-* [roop extension](https://github.com/s0md3v/sd-webui-roop) 0.0.2
 * [Kohya_ss](https://github.com/bmaltais/kohya_ss) v21.8.10
 * [ComfyUI](https://github.com/comfyanonymous/ComfyUI)
 * [ComfyUI Manager](https://github.com/ltdrdata/ComfyUI-Manager.git)
 * Torch 2.0.1
 * xformers 0.0.21
-* sd_xl_base_1.0.safetensors
-* sd_xl_refiner_1.0.safetensors
-* sdxl_vae.safetensors
-* inswapper_128.onnx
+* deliberate_v2.safetensors
+* vae-ft-mse-840000-ema-pruned.safetensors
 * [runpodctl](https://github.com/runpod/runpodctl)
 * [croc](https://github.com/schollz/croc)
 * [rclone](https://rclone.org/)

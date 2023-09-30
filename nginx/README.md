@@ -1,7 +1,5 @@
 ## Automatic1111 Stable Diffusion WebUI, Kohya SS and ComfyUI
 
-### Version 3.0.4 with SDXL support and ControlNet SDXL support
-
 ### Included in this Template
 
 * Ubuntu 22.04 LTS
@@ -19,15 +17,12 @@
   https://github.com/Bing-su/adetailer) v23.9.2
 * [Locon extension](
   https://github.com/ashleykleynhans/a1111-sd-webui-locon)
-* [roop extension](https://github.com/s0md3v/sd-webui-roop) 0.0.2
 * [Kohya_ss](https://github.com/bmaltais/kohya_ss) v21.8.10
 * [ComfyUI](https://github.com/comfyanonymous/ComfyUI)
 * Torch 2.0.1
 * xformers 0.0.21
-* sd_xl_base_1.0.safetensors
-* sd_xl_refiner_1.0.safetensors
-* sdxl_vae.safetensors
-* inswapper_128.onnx
+* deliberate_v2.safetensors
+* vae-ft-mse-840000-ema-pruned.safetensors
 * [runpodctl](https://github.com/runpod/runpodctl)
 * [croc](https://github.com/schollz/croc)
 * [rclone](https://rclone.org/)
@@ -88,7 +83,7 @@ encrypted volumes!
 
 This is a custom packaged template for Stable Diffusion
 using the Automatic1111 Web UI, as well as the Dreambooth,
-Deforum, ControlNet, ADetailer and roop extension repos.
+Deforum, ControlNet, ADetailer and Civit AI Browser extension repos.
 
 It also contains the Kohya_ss Web UI and ComfyUI.
 
@@ -121,18 +116,3 @@ script again.
 
 `--xformers` and `--api` are parameters that are
 frequently asked about.
-
-### Using your own models
-
-The best ways to get your models onto your pod is
-by using `runpodctl` or by uploading them to Google
-Drive or other cloud storage and downloading them
-to your pod from there.
-
-### Uploading to Google Drive
-
-If you're done with the pod and would like to send
-things to Google Drive, you can use this colab to do it
-using `runpodctl`. You run the `runpodctl` either in
-a web terminal (found in the pod connect menu), or
-in a terminal on the desktop.

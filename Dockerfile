@@ -74,15 +74,13 @@ FROM base as setup
 
 RUN mkdir -p /sd-models
 
-# Add SDXL models and VAE
+# Add SD models and VAE
 # These need to already have been downloaded:
-#   wget https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
-#   wget https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors
-#   wget https://huggingface.co/madebyollin/sdxl-vae-fp16-fix/resolve/main/sdxl_vae.safetensors
-# COPY sd_xl_base_1.0.safetensors /sd-models/sd_xl_base_1.0.safetensors
-# COPY sd_xl_refiner_1.0.safetensors /sd-models/sd_xl_refiner_1.0.safetensors
-# COPY sdxl_vae.safetensors /sd-models/sdxl_vae.safetensors
-COPY deliberate_v3.safetensors /sd-models/deliberate_v3.safetensors
+#   wget https://civitai.com/api/download/models/15236
+#   wget https://civitai.com/api/download/models/80869
+# COPY deliberate_v2.safetensors /sd-models/deliberate_v2.safetensors
+# COPY vae-ft-mse-840000-ema-pruned.safetensors /sd-models/vae-ft-mse-840000-ema-pruned.safetensors
+COPY deliberate_v2.safetensors /sd-models/deliberate_v2.safetensors
 COPY vae-ft-mse-840000-ema-pruned.safetensors /sd-models/vae-ft-mse-840000-ema-pruned.safetensors
 
 # Clone the git repo of the Stable Diffusion Web UI by Automatic1111
@@ -107,9 +105,8 @@ RUN source /venv/bin/activate && \
     deactivate
 
 # Cache the Stable Diffusion Models
-# SDXL models result in OOM kills with 8GB system memory, probably need 12GB+ to cache these
 RUN source /venv/bin/activate && \
-    python3 cache-sd-model.py --use-cpu=all --ckpt /sd-models/deliberate_v3.safetensors && \
+    python3 cache-sd-model.py --use-cpu=all --ckpt /sd-models/deliberate_v2.safetensors && \
     deactivate
 
 # Clone the Automatic1111 Extensions
@@ -117,23 +114,17 @@ RUN git clone https://github.com/d8ahazard/sd_dreambooth_extension.git extension
     git clone --depth=1 https://github.com/deforum-art/sd-webui-deforum.git extensions/deforum && \
     git clone --depth=1 https://github.com/Mikubill/sd-webui-controlnet.git extensions/sd-webui-controlnet && \
     git clone --depth=1 https://github.com/ashleykleynhans/a1111-sd-webui-locon.git extensions/a1111-sd-webui-locon && \
-    git clone --depth=1 https://github.com/RuKapSan/sd-webui-faceswaplab.git extensions/sd-webui-faceswaplab && \
     git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
     git clone --depth=1 https://github.com/BlafKing/sd-civitai-browser-plus.git extensions/sd-civitai-browser-plus && \
     git clone --depth=1 https://github.com/RuKapSan/stable-diffusion-webui-vectorstudio.git extensions/sd-vectorstudio
 
 
 
-# Install dependencies for Deforum, ControlNet, faceswaplab, vectorstudio, civitAI and After Detailer extensions
+# Install dependencies for Deforum, ControlNet, vectorstudio, civitAI and After Detailer extensions
 RUN source /venv/bin/activate && \
     cd /stable-diffusion-webui/extensions/deforum && \
     pip3 install -r requirements.txt && \
     cd /stable-diffusion-webui/extensions/sd-webui-controlnet && \
-    pip3 install -r requirements.txt && \
-    deactivate
-
-RUN source /venv/bin/activate && \
-    cd /stable-diffusion-webui/extensions/sd-webui-faceswaplab && \
     pip3 install -r requirements.txt && \
     deactivate
 
@@ -156,11 +147,6 @@ RUN source /venv/bin/activate && \
     cd /stable-diffusion-webui/extensions/sd_dreambooth_extension && \
     pip3 install -r requirements.txt && \
     deactivate
-
-# Add inswapper model for the roop extension
-RUN mkdir -p /workspace/stable-diffusion-webui/models/faceswaplab && \
-    cd /workspace/stable-diffusion-webui/models/faceswaplab && \
-    wget https://huggingface.co/ashleykleynhans/inswapper/resolve/main/inswapper_128.onnx
 
 # Fix Tensorboard
 RUN source /venv/bin/activate && \
@@ -238,8 +224,13 @@ RUN git clone --depth=1 https://github.com/ashleykleynhans/civitai-downloader.gi
 # Copy Stable Diffusion Web UI config files
 COPY a1111/relauncher.py a1111/webui-user.sh a1111/config.json a1111/ui-config.json /stable-diffusion-webui/
 
-# ADD SDXL styles.csv
+# ADD SD styles.csv
 ADD https://raw.githubusercontent.com/RuKapSan/SD-styles/main/styles.csv /stable-diffusion-webui/styles.csv
+
+ADD https://civitai.com/api/download/models/64596 /sd-models/Lora/Color_Icons.safetensors
+ADD https://civitai.com/api/download/models/96612 /sd-models/Lora/flaticon_v1_2.safetensors
+ADD https://civitai.com/api/download/models/61877 /sd-models/Lora/logo_v1-000012.safetensors
+ADD https://civitai.com/api/download/models/55466 /sd-models/Lora/logogotypes.safetensors
 
 # Copy ComfyUI Extra Model Paths (to share models with A1111)
 COPY comfyui/extra_model_paths.yaml /ComfyUI/
