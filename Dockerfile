@@ -76,8 +76,8 @@ RUN mkdir -p /sd-models
 
 # Add SD models and VAE
 # These need to already have been downloaded:
-#   wget https://civitai.com/api/download/models/15236 Deliberate
-#   wget https://civitai.com/api/download/models/114076 VAE
+#   wget https://civitai.com/api/download/models/15236 -O deliberate_v2.safetensors
+#   wget https://civitai.com/api/download/models/114076 -O matrixVAE_v30.pt
 COPY deliberate_v2.safetensors /sd-models/deliberate_v2.safetensors
 COPY matrixVAE_v30.pt /sd-models/matrixVAE_v30.pt
 
@@ -114,6 +114,7 @@ RUN git clone https://github.com/d8ahazard/sd_dreambooth_extension.git extension
     git clone --depth=1 https://github.com/ashleykleynhans/a1111-sd-webui-locon.git extensions/a1111-sd-webui-locon && \
     git clone --depth=1 https://github.com/Bing-su/adetailer.git extensions/adetailer && \
     git clone --depth=1 https://github.com/BlafKing/sd-civitai-browser-plus.git extensions/sd-civitai-browser-plus && \
+    git clone --depth=1 https://github.com/RuKapSan/stable-diffusion-webui-rembg.git extensions/stable-diffusion-webui-rembg && \
     git clone --depth=1 https://github.com/RuKapSan/stable-diffusion-webui-vectorstudio.git extensions/sd-vectorstudio
 
 
@@ -131,6 +132,11 @@ RUN source /venv/bin/activate && \
     pip3 install -r requirements.txt && \
     cd /stable-diffusion-webui/extensions/adetailer && \
     python -m install && \
+    deactivate
+
+RUN source /venv/bin/activate && \
+    cd /stable-diffusion-webui/extensions/stable-diffusion-webui-rembg && \
+    pip3 install rembg onnxruntime pymatting pooch && \
     deactivate
 
 # Set Dreambooth extension version
