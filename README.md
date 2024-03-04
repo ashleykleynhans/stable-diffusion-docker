@@ -122,6 +122,7 @@ You can obviously substitute the image name and tag with your own.
 
 | Variable           | Description                                  | Default                                 |
 |--------------------|----------------------------------------------|-----------------------------------------|
+| JUPYTER_PASSWORD   | Password for Jupyter Lab                     | Jup1t3R!                                |
 | VENV_PATH          | Set the path for the Python venv for the app | /workspace/venvs/stable-diffusion-webui |
 | DISABLE_AUTOLAUNCH | Disable Web UIs from launching automatically | enabled                                 |
 | ENABLE_TENSORBOARD | Enables Tensorboard on port 6006             | enabled                                 |
