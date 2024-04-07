@@ -10,7 +10,7 @@ install_dir="/workspace"
 #clone_dir="stable-diffusion-webui"
 
 # Commandline arguments for webui.py, for example: export COMMANDLINE_ARGS="--medvram --opt-split-attention"
-export COMMANDLINE_ARGS="--port 3001 --skip-install --listen --api --xformers --enable-insecure-extension-access --no-half-vae"
+export COMMANDLINE_ARGS="--port 3001 --skip-install --listen --api --xformers --enable-insecure-extension-access --no-half-vae ${A1111_EXTRA_ARGS}"
 
 # python3 executable
 #python_cmd="python3"
@@ -46,4 +46,8 @@ venv_dir=VENV_PATH
 # Uncomment to disable TCMalloc
 #export NO_TCMALLOC="True"
 
+WEBUI_USER_LOCAL=${WEBUI_USER_LOCAL:-./webui-user.local.sh}
+if [ -e "$WEBUI_USER_LOCAL" ]; then
+    source "$WEBUI_USER_LOCAL"
+fi
 ###########################################
