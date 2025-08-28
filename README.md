@@ -38,9 +38,9 @@ Now with SDXL support.
 * [CivitAI Browser+ extension](https://github.com/BlafKing/sd-civitai-browser-plus)
 * [Stable Diffusion Dynamic Thresholding (CFG Scale Fix) extension](https://github.com/mcmonkeyprojects/sd-dynamic-thresholding)
 * [Kohya_ss](https://github.com/bmaltais/kohya_ss) v25.2.1
-* [ComfyUI](https://github.com/comfyanonymous/ComfyUI) v0.3.52
+* [ComfyUI](https://github.com/comfyanonymous/ComfyUI) v0.3.53
 * [ComfyUI Manager](https://github.com/ltdrdata/ComfyUI-Manager)
-* [InvokeAI](https://github.com/invoke-ai/InvokeAI) v6.4.0
+* [InvokeAI](https://github.com/invoke-ai/InvokeAI) v6.5.0
 * [inswapper_128.onnx](
   https://github.com/facefusion/facefusion-assets/releases/download/models/inswapper_128.onnx)
 * [runpodctl](https://github.com/runpod/runpodctl)
