@@ -44,7 +44,7 @@ target "default" {
 
         INVOKEAI_VERSION = "6.5.0"
         INVOKEAI_TORCH_VERSION = "2.7.1+cu${CU_VERSION}"
-        INVOKEAI_XFORMERS_VERSION = "0.0.31"
+        INVOKEAI_XFORMERS_VERSION = "0.0.31.post1"
 
         COMFYUI_VERSION = "v0.3.53"
         COMFYUI_TORCH_VERSION = "2.6.0+cu${CU_VERSION}"
