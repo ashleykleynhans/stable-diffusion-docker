@@ -42,7 +42,7 @@ target "default" {
         KOHYA_TORCH_VERSION = "2.6.0+cu${CU_VERSION}"
         KOHYA_XFORMERS_VERSION = "0.0.29.post3"
 
-        INVOKEAI_VERSION = "6.6.0"
+        INVOKEAI_VERSION = "6.7.0"
         INVOKEAI_TORCH_VERSION = "2.7.1+cu${CU_VERSION}"
         INVOKEAI_XFORMERS_VERSION = "0.0.31.post1"
 
