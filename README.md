@@ -146,7 +146,7 @@ You can obviously substitute the image name and tag with your own.
 | 7777         | 7777          | Code Server                   |
 | 8000         | 8000          | Application Manager           |
 | 8888         | 8888          | Jupyter Lab                   |
-| 2999         | 2999          | RunPod File Uploader          |
+| 2999         | 2999          | Runpod File Uploader          |
 
 ### Environment Variables
 
