@@ -1,0 +1,161 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docker-bake.hcl'
+  workflow_dispatch:
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.extract.outputs.release }}
+      should_build: ${{ steps.check.outputs.should_build }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Extract RELEASE from docker-bake.hcl
+        id: extract
+        run: |
+          RELEASE=$(grep 'variable "RELEASE"' -A 2 docker-bake.hcl | grep 'default' | sed 's/.*"\(.*\)"/\1/')
+          echo "release=${RELEASE}" >> $GITHUB_OUTPUT
+          echo "Current RELEASE: ${RELEASE}"
+
+      - name: Check if RELEASE changed
+        id: check
+        run: |
+          # For manual triggers, always build
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "Manual trigger - will build"
+            exit 0
+          fi
+
+          # Check if docker-bake.hcl was modified
+          git diff HEAD^ HEAD docker-bake.hcl > /tmp/diff.txt
+
+          if grep -E '^\+.*variable "RELEASE"' /tmp/diff.txt || \
+             grep -E '^\+.*default = ' /tmp/diff.txt | grep -E 'RELEASE' -B 2; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "RELEASE changed - will build"
+          else
+            echo "should_build=false" >> $GITHUB_OUTPUT
+            echo "No RELEASE changes detected - skipping build"
+          fi
+
+  build-and-push:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.should_build == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      images: ${{ steps.list-images.outputs.images }}
+      images_json: ${{ steps.list-images.outputs.images_json }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Free up disk space
+        run: |
+          sudo swapoff -a
+          sudo rm -rf /swapfile /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo apt clean
+          df -h
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: |
+            image=moby/buildkit:latest
+            network=host
+          buildkitd-flags: --debug
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        env:
+          REGISTRY: ghcr.io
+          REGISTRY_USER: ${{ github.repository_owner }}
+        run: |
+          echo "Building and pushing Docker image..."
+          docker buildx bake --push default
+          echo "Image built and pushed successfully!"
+
+      - name: List built image
+        id: list-images
+        run: |
+          RELEASE="${{ needs.detect-changes.outputs.release }}"
+          REGISTRY="ghcr.io"
+          REGISTRY_USER="${{ github.repository_owner }}"
+          APP="comfyui"
+
+          # Create the image name
+          IMAGE="${REGISTRY}/${REGISTRY_USER}/${APP}:${RELEASE}"
+
+          # Create JSON for easier parsing by third-party tools
+          IMAGES_JSON=$(echo "[\"${IMAGE}\"]" | jq -c '.')
+
+          # Output for GitHub Actions
+          echo "images<<EOF" >> $GITHUB_OUTPUT
+          echo "$IMAGE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          echo "images_json=${IMAGES_JSON}" >> $GITHUB_OUTPUT
+
+          # Also write to a file that can be downloaded
+          echo "$IMAGE" > built-images.txt
+          echo "$IMAGES_JSON" > built-images.json
+
+      - name: Upload image list artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-images-list
+          path: |
+            built-images.txt
+            built-images.json
+          retention-days: 90
+
+      - name: Display built image
+        run: |
+          echo "Successfully built and pushed the following image:"
+          cat built-images.txt
+          echo ""
+          echo "JSON format:"
+          cat built-images.json
+
+  create-summary:
+    needs: [detect-changes, build-and-push]
+    if: needs.detect-changes.outputs.should_build == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create job summary
+        run: |
+          echo "## Docker Image Built" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Release:** ${{ needs.detect-changes.outputs.release }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Image Pushed to GitHub Container Registry:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "${{ needs.build-and-push.outputs.images }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### JSON Format (for APIs):" >> $GITHUB_STEP_SUMMARY
+          echo '```json' >> $GITHUB_STEP_SUMMARY
+          echo '${{ needs.build-and-push.outputs.images_json }}' | jq '.' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Download the image list from the artifacts section above." >> $GITHUB_STEP_SUMMARY
