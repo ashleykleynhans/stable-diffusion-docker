@@ -14,6 +14,7 @@ jobs:
     outputs:
       release: ${{ steps.extract.outputs.release }}
       app: ${{ steps.extract.outputs.app }}
+      registry_user: ${{ steps.extract.outputs.registry_user }}
       should_build: ${{ steps.check.outputs.should_build }}
     steps:
       - name: Checkout code
@@ -21,15 +22,20 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Extract RELEASE and APP from docker-bake.hcl
+      - name: Extract variables from docker-bake.hcl
         id: extract
         run: |
           RELEASE=$(grep 'variable "RELEASE"' -A 2 docker-bake.hcl | grep 'default' | sed 's/.*"\(.*\)"/\1/')
           APP=$(grep 'variable "APP"' -A 2 docker-bake.hcl | grep 'default' | sed 's/.*"\(.*\)"/\1/')
+          REGISTRY_USER=$(grep 'variable "REGISTRY_USER"' -A 2 docker-bake.hcl | grep 'default' | sed 's/.*"\(.*\)"/\1/')
+
           echo "release=${RELEASE}" >> $GITHUB_OUTPUT
           echo "app=${APP}" >> $GITHUB_OUTPUT
+          echo "registry_user=${REGISTRY_USER}" >> $GITHUB_OUTPUT
+
           echo "Current RELEASE: ${RELEASE}"
           echo "Current APP: ${APP}"
+          echo "Current REGISTRY_USER: ${REGISTRY_USER}"
 
       - name: Check if RELEASE changed
         id: check
@@ -90,35 +96,45 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Create temporary docker-bake override file
+        run: |
+          # Create an override file that forces ghcr.io
+          cat > docker-bake.override.hcl << 'EOF'
+          target "default" {
+            inherits = ["default"]
+            tags = ["ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}"]
+          }
+          EOF
+
+          echo "Override file created:"
+          cat docker-bake.override.hcl
+
       - name: Build and push Docker image
-        env:
-          REGISTRY: ghcr.io
-          REGISTRY_USER: ${{ github.repository_owner }}
         run: |
           echo "Building and pushing Docker image to ghcr.io..."
 
-          APP="${{ needs.detect-changes.outputs.app }}"
-          RELEASE="${{ needs.detect-changes.outputs.release }}"
-
           # Show what will be built
-          echo "Registry: $REGISTRY"
-          echo "User: $REGISTRY_USER"
-          echo "App: $APP"
-          echo "Release: $RELEASE"
-          echo "Image will be: $REGISTRY/$REGISTRY_USER/$APP:$RELEASE"
-          docker buildx bake --push default
-          echo "Image built and pushed successfully!"
+          echo "Configuration:"
+          docker buildx bake -f docker-bake.hcl -f docker-bake.override.hcl --print default
+
+          echo ""
+          echo "Starting build..."
+
+          # Build with both files - override will take precedence for tags
+          docker buildx bake -f docker-bake.hcl -f docker-bake.override.hcl --push default
+
+          echo "Build completed!"
 
       - name: Verify image was pushed
         run: |
           IMAGE="ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}"
-          echo "Verifying image was pushed: $IMAGE"
+          echo "Verifying image: $IMAGE"
 
-          # Wait a moment for registry to update
-          sleep 5
+          # Wait for registry to update
+          sleep 10
 
-          # Check with Docker CLI (should work since we're logged in)
-          docker pull $IMAGE --quiet && echo "✓ Image verified: $IMAGE" || echo "✗ Could not pull image: $IMAGE"
+          # Try to pull the image
+          docker pull $IMAGE && echo "✅ SUCCESS: Image verified: $IMAGE" || echo "❌ FAILED: Could not pull image: $IMAGE"
 
       - name: List built image
         id: list-images
