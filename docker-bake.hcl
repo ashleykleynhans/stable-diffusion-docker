@@ -33,6 +33,9 @@ variable "PYTHON_VERSION" {
 target "default" {
     dockerfile = "Dockerfile"
     tags = ["${REGISTRY}/${REGISTRY_USER}/${APP}:${RELEASE}"]
+    labels = {
+        "org.opencontainers.image.source" = "https://github.com/ashleykleynhans/stable-diffusion-docker"
+    }
     args = {
         RELEASE = "${RELEASE}"
         BASE_IMAGE = "${BASE_IMAGE_REPOSITORY}:${BASE_IMAGE_VERSION}"
