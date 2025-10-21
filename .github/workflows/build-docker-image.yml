@@ -91,11 +91,12 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
+        env:
+          REGISTRY: ghcr.io
+          REGISTRY_USER: ${{ github.repository_owner }}
         run: |
           echo "Building and pushing Docker image to ghcr.io..."
 
-          REGISTRY="ghcr.io"
-          REGISTRY_USER="${{ github.repository_owner }}"
           APP="${{ needs.detect-changes.outputs.app }}"
           RELEASE="${{ needs.detect-changes.outputs.release }}"
 
@@ -105,29 +106,7 @@ jobs:
           echo "App: $APP"
           echo "Release: $RELEASE"
           echo "Image will be: $REGISTRY/$REGISTRY_USER/$APP:$RELEASE"
-
-          # Method 1: Using --set to override variables (most reliable)
-          docker buildx bake \
-            --set "*.cache-from=type=gha" \
-            --set "*.cache-to=type=gha,mode=max" \
-            --set "REGISTRY=${REGISTRY}" \
-            --set "REGISTRY_USER=${REGISTRY_USER}" \
-            --set "APP=${APP}" \
-            --set "RELEASE=${RELEASE}" \
-            --print default
-
-          echo "--- Now building and pushing ---"
-
-          docker buildx bake \
-            --set "*.cache-from=type=gha" \
-            --set "*.cache-to=type=gha,mode=max" \
-            --set "REGISTRY=${REGISTRY}" \
-            --set "REGISTRY_USER=${REGISTRY_USER}" \
-            --set "APP=${APP}" \
-            --set "RELEASE=${RELEASE}" \
-            --push \
-            default
-
+          docker buildx bake --push default
           echo "Image built and pushed successfully!"
 
       - name: Verify image was pushed
