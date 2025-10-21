@@ -91,14 +91,55 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
-        env:
-          REGISTRY: ghcr.io
-          REGISTRY_USER: ${{ github.repository_owner }}
-          APP: ${{ needs.detect-changes.outputs.app }}
         run: |
-          echo "Building and pushing Docker image..."
-          docker buildx bake --push default
+          echo "Building and pushing Docker image to ghcr.io..."
+
+          REGISTRY="ghcr.io"
+          REGISTRY_USER="${{ github.repository_owner }}"
+          APP="${{ needs.detect-changes.outputs.app }}"
+          RELEASE="${{ needs.detect-changes.outputs.release }}"
+
+          # Show what will be built
+          echo "Registry: $REGISTRY"
+          echo "User: $REGISTRY_USER"
+          echo "App: $APP"
+          echo "Release: $RELEASE"
+          echo "Image will be: $REGISTRY/$REGISTRY_USER/$APP:$RELEASE"
+
+          # Method 1: Using --set to override variables (most reliable)
+          docker buildx bake \
+            --set "*.cache-from=type=gha" \
+            --set "*.cache-to=type=gha,mode=max" \
+            --set "REGISTRY=${REGISTRY}" \
+            --set "REGISTRY_USER=${REGISTRY_USER}" \
+            --set "APP=${APP}" \
+            --set "RELEASE=${RELEASE}" \
+            --print default
+
+          echo "--- Now building and pushing ---"
+
+          docker buildx bake \
+            --set "*.cache-from=type=gha" \
+            --set "*.cache-to=type=gha,mode=max" \
+            --set "REGISTRY=${REGISTRY}" \
+            --set "REGISTRY_USER=${REGISTRY_USER}" \
+            --set "APP=${APP}" \
+            --set "RELEASE=${RELEASE}" \
+            --push \
+            default
+
           echo "Image built and pushed successfully!"
+
+      - name: Verify image was pushed
+        run: |
+          IMAGE="ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}"
+          echo "Verifying image was pushed: $IMAGE"
+
+          # Wait a moment for registry to update
+          sleep 5
+
+          # Check with Docker CLI (should work since we're logged in)
+          docker pull $IMAGE --quiet && echo "✓ Image verified: $IMAGE" || echo "✗ Could not pull image: $IMAGE"
 
       - name: List built image
         id: list-images
@@ -159,9 +200,10 @@ jobs:
           echo "${{ needs.build-and-push.outputs.images }}" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### JSON Format (for APIs):" >> $GITHUB_STEP_SUMMARY
-          echo '```json' >> $GITHUB_STEP_SUMMARY
-          echo '${{ needs.build-and-push.outputs.images_json }}' | jq '.' >> $GITHUB_STEP_SUMMARY
+          echo "### To pull this image:" >> $GITHUB_STEP_SUMMARY
+          echo '```bash' >> $GITHUB_STEP_SUMMARY
+          echo "docker pull ${{ needs.build-and-push.outputs.images }}" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📦 Download the image list from the artifacts section above." >> $GITHUB_STEP_SUMMARY
+          echo "**Note:** If the image is private, make it public at:" >> $GITHUB_STEP_SUMMARY
+          echo "https://github.com/${{ github.repository_owner }}?tab=packages" >> $GITHUB_STEP_SUMMARY
