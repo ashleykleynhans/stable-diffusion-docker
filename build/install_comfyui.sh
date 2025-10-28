@@ -17,7 +17,7 @@ pip3 install --no-cache-dir xformers==${COMFYUI_XFORMERS_VERSION} --index-url ${
 # Install requirements
 pip3 install -r requirements.txt
 pip3 install accelerate
-pip3 install sageattention
+pip3 install sageattention==1.0.6
 pip install setuptools --upgrade
 
 # Install ComfyUI Custom Nodes
