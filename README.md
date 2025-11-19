@@ -17,7 +17,7 @@ Now with SDXL support.
 
 * Ubuntu 22.04 LTS
 * CUDA 12.4
-* Python 3.11.12
+* Python 3.11.14
 * Torch 2.6.0
 * xformers 0.0.29.post3
 * [Jupyter Lab](https://github.com/jupyterlab/jupyterlab)
@@ -38,7 +38,7 @@ Now with SDXL support.
 * [CivitAI Browser+ extension](https://github.com/BlafKing/sd-civitai-browser-plus)
 * [Stable Diffusion Dynamic Thresholding (CFG Scale Fix) extension](https://github.com/mcmonkeyprojects/sd-dynamic-thresholding)
 * [Kohya_ss](https://github.com/bmaltais/kohya_ss) v25.2.1
-* [ComfyUI](https://github.com/comfyanonymous/ComfyUI) v0.3.69
+* [ComfyUI](https://github.com/comfyanonymous/ComfyUI) v0.3.70
 * [ComfyUI Manager](https://github.com/ltdrdata/ComfyUI-Manager)
 * [InvokeAI](https://github.com/invoke-ai/InvokeAI) v6.9.0
 * [inswapper_128.onnx](
