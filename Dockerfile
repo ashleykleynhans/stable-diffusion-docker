@@ -1,5 +1,5 @@
 # Stage 1: Base Image
-ARG BASE_IMAGE=ashleykza/cu124-py311-1.10.1.post4
+ARG BASE_IMAGE=ashleykza/cu124-py311-1.10.1.post8
 FROM ${BASE_IMAGE} AS base
 
 ARG INDEX_URL
