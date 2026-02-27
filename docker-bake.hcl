@@ -11,7 +11,7 @@ variable "APP" {
 }
 
 variable "RELEASE" {
-    default = "8.10.0"
+    default = "8.10.1"
 }
 
 variable "CU_VERSION" {
@@ -23,7 +23,7 @@ variable "BASE_IMAGE_REPOSITORY" {
 }
 
 variable "BASE_IMAGE_VERSION" {
-    default = "cu124-py311-1.10.1.post6"
+    default = "cu124-py311-1.10.1.post7"
 }
 
 variable "PYTHON_VERSION" {
