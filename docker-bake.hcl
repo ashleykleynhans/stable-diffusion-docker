@@ -27,7 +27,7 @@ variable "BASE_IMAGE_VERSION" {
 }
 
 variable "PYTHON_VERSION" {
-    default = "3.10"
+    default = "3.11"
 }
 
 target "default" {
