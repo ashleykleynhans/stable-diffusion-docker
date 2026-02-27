@@ -23,7 +23,7 @@ variable "BASE_IMAGE_REPOSITORY" {
 }
 
 variable "BASE_IMAGE_VERSION" {
-    default = "1.10.1.post4"
+    default = "cu124-py311-1.10.1.post4"
 }
 
 variable "PYTHON_VERSION" {
