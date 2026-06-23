@@ -26,7 +26,7 @@ cd custom_nodes/ComfyUI-Manager
 pip3 install -r requirements.txt
 pip3 cache purge
 
-# Fix some incorrect modules
-pip3 install numpy==1.26.4
+# Align numpy with what scipy/xformers require (>=2.0,<2.8)
+pip3 install "numpy>=2.0,<2.8"
 pip3 cache purge
 deactivate
