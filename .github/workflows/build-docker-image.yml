@@ -133,7 +133,7 @@ jobs:
           sleep 10
 
           # Try to pull the image
-          docker pull $IMAGE && echo "✅ SUCCESS: Image verified: $IMAGE" || echo "❌ FAILED: Could not pull image: $IMAGE"
+          docker manifest inspect $IMAGE && echo "✅ SUCCESS: Image verified: $IMAGE" || echo "❌ FAILED: Could not find image manifest: $IMAGE"
 
       - name: List built image
         id: list-images
