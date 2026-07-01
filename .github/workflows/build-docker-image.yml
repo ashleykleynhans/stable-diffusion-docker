@@ -50,8 +50,7 @@ jobs:
           # Check if docker-bake.hcl was modified
           git diff HEAD^ HEAD docker-bake.hcl > /tmp/diff.txt
 
-          if grep -E '^\+.*variable "RELEASE"' /tmp/diff.txt || \
-             grep -E '^\+.*default = ' /tmp/diff.txt | grep -E 'RELEASE' -B 2; then
+          if grep -E '^\+.*variable "RELEASE"[[:space:]]*{[[:space:]]*default[[:space:]]*=[[:space:]]*"[^"]+"' /tmp/diff.txt; then
             echo "should_build=true" >> $GITHUB_OUTPUT
             echo "RELEASE changed - will build"
           else
