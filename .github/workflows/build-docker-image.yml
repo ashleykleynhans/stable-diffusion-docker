@@ -101,7 +101,10 @@ jobs:
           cat > docker-bake.override.hcl << 'EOF'
           target "default" {
             inherits = ["default"]
-            tags = ["ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}"]
+            tags = [
+              "ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}",
+              "ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:latest"
+            ]
           }
           EOF
 
@@ -126,14 +129,16 @@ jobs:
 
       - name: Verify image was pushed
         run: |
-          IMAGE="ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}"
-          echo "Verifying image: $IMAGE"
+          RELEASE_IMAGE="ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}"
+          LATEST_IMAGE="ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:latest"
 
           # Wait for registry to update
           sleep 10
 
-          # Try to pull the image
-          docker manifest inspect $IMAGE && echo "✅ SUCCESS: Image verified: $IMAGE" || echo "❌ FAILED: Could not find image manifest: $IMAGE"
+          for IMAGE in "$RELEASE_IMAGE" "$LATEST_IMAGE"; do
+            echo "Verifying image: $IMAGE"
+            docker manifest inspect $IMAGE && echo "✅ SUCCESS: Image verified: $IMAGE" || echo "❌ FAILED: Could not find image manifest: $IMAGE"
+          done
 
       - name: List built image
         id: list-images
@@ -143,21 +148,23 @@ jobs:
           REGISTRY="ghcr.io"
           REGISTRY_USER="${{ github.repository_owner }}"
 
-          # Create the image name
-          IMAGE="${REGISTRY}/${REGISTRY_USER}/${APP}:${RELEASE}"
+          # Create the image names
+          RELEASE_IMAGE="${REGISTRY}/${REGISTRY_USER}/${APP}:${RELEASE}"
+          LATEST_IMAGE="${REGISTRY}/${REGISTRY_USER}/${APP}:latest"
 
           # Create JSON for easier parsing by third-party tools
-          IMAGES_JSON=$(echo "[\"${IMAGE}\"]" | jq -c '.')
+          IMAGES_JSON=$(echo "[\"${RELEASE_IMAGE}\", \"${LATEST_IMAGE}\"]" | jq -c '.')
 
           # Output for GitHub Actions
           echo "images<<EOF" >> $GITHUB_OUTPUT
-          echo "$IMAGE" >> $GITHUB_OUTPUT
+          echo "$RELEASE_IMAGE" >> $GITHUB_OUTPUT
+          echo "$LATEST_IMAGE" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
           echo "images_json=${IMAGES_JSON}" >> $GITHUB_OUTPUT
 
           # Also write to a file that can be downloaded
-          echo "$IMAGE" > built-images.txt
+          printf '%s\n%s\n' "$RELEASE_IMAGE" "$LATEST_IMAGE" > built-images.txt
           echo "$IMAGES_JSON" > built-images.json
 
       - name: Upload image list artifacts
