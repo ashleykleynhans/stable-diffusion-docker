@@ -40,7 +40,7 @@ Now with SDXL support.
 * [Kohya_ss](https://github.com/bmaltais/kohya_ss) v25.2.1
 * [ComfyUI](https://github.com/comfyanonymous/ComfyUI) v0.27.0
 * [ComfyUI Manager](https://github.com/ltdrdata/ComfyUI-Manager)
-* [InvokeAI](https://github.com/invoke-ai/InvokeAI) v6.13.0
+* [InvokeAI](https://github.com/invoke-ai/InvokeAI) v6.13.5
 * [inswapper_128.onnx](
   https://github.com/facefusion/facefusion-assets/releases/download/models/inswapper_128.onnx)
 * [runpodctl](https://github.com/runpod/runpodctl)
@@ -129,7 +129,7 @@ docker run -d \
   -e VENV_PATH=/workspace/venvs/a1111 \
   -e JUPYTER_PASSWORD=Jup1t3R! \
   -e ENABLE_TENSORBOARD=1 \
-  ashleykza/stable-diffusion-webui:latest
+  ghcr.io/ashleykleynhans/stable-diffusion-webui:8.10.27
 ```
 
 You can obviously substitute the image name and tag with your own.
