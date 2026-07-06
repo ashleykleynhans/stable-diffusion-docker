@@ -65,6 +65,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
+      attestations: write
     outputs:
       images: ${{ steps.list-images.outputs.images }}
       images_json: ${{ steps.list-images.outputs.images_json }}
@@ -105,6 +107,10 @@ jobs:
               "ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}",
               "ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:latest"
             ]
+            attest = [
+              "type=provenance,mode=max",
+              "type=sbom"
+            ]
           }
           EOF
 
@@ -137,7 +143,8 @@ jobs:
 
           for IMAGE in "$RELEASE_IMAGE" "$LATEST_IMAGE"; do
             echo "Verifying image: $IMAGE"
-            docker manifest inspect $IMAGE && echo "✅ SUCCESS: Image verified: $IMAGE" || echo "❌ FAILED: Could not find image manifest: $IMAGE"
+            docker buildx imagetools inspect $IMAGE || { echo "❌ FAILED: Could not verify image: $IMAGE"; exit 1; }
+            echo "✅ SUCCESS: Image verified: $IMAGE"
           done
 
       - name: List built image
