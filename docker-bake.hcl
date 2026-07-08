@@ -11,7 +11,7 @@ variable "APP" {
 }
 
 variable "RELEASE" {
-    default = "8.10.28"
+    default = "8.10.29"
 }
 
 variable "CU_VERSION" {
@@ -41,7 +41,7 @@ target "default" {
         BASE_IMAGE = "${BASE_IMAGE_REPOSITORY}:${BASE_IMAGE_VERSION}"
         INDEX_URL = "https://download.pytorch.org/whl/cu${CU_VERSION}"
 
-        KOHYA_VERSION = "v25.2.1"
+        KOHYA_VERSION = "v25.2.2"
         KOHYA_TORCH_VERSION = "2.6.0+cu${CU_VERSION}"
         KOHYA_XFORMERS_VERSION = "0.0.29.post3"
 
