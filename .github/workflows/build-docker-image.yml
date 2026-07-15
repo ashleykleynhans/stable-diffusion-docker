@@ -47,10 +47,14 @@ jobs:
             exit 0
           fi
 
-          # Check if docker-bake.hcl was modified
-          git diff HEAD^ HEAD docker-bake.hcl > /tmp/diff.txt
+          # Extract the current and previous RELEASE values
+          PREV_RELEASE=$(git show HEAD^:docker-bake.hcl | grep -A 2 'variable "RELEASE"' | grep 'default' | sed 's/.*"\(.*\)"/\1/')
+          CURR_RELEASE="${{ steps.extract.outputs.release }}"
 
-          if grep -E '^\+.*variable "RELEASE"[[:space:]]*{[[:space:]]*default[[:space:]]*=[[:space:]]*"[^"]+"' /tmp/diff.txt; then
+          echo "Previous RELEASE: '${PREV_RELEASE}'"
+          echo "Current RELEASE: '${CURR_RELEASE}'"
+
+          if [ "${PREV_RELEASE}" != "${CURR_RELEASE}" ]; then
             echo "should_build=true" >> $GITHUB_OUTPUT
             echo "RELEASE changed - will build"
           else
