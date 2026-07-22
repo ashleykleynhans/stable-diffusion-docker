@@ -40,7 +40,7 @@ Now with SDXL support.
 * [Kohya_ss](https://github.com/bmaltais/kohya_ss) v26.0.0
 * [ComfyUI](https://github.com/comfyanonymous/ComfyUI) v0.28.0
 * [ComfyUI Manager](https://github.com/ltdrdata/ComfyUI-Manager)
-* [InvokeAI](https://github.com/invoke-ai/InvokeAI) v6.13.6
+* [InvokeAI](https://github.com/invoke-ai/InvokeAI) v6.13.7
 * [inswapper_128.onnx](
   https://github.com/facefusion/facefusion-assets/releases/download/models/inswapper_128.onnx)
 * [runpodctl](https://github.com/runpod/runpodctl)
