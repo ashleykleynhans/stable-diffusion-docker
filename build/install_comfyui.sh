@@ -20,6 +20,13 @@ pip3 install accelerate
 pip3 install sageattention==1.0.6
 pip install setuptools --upgrade
 
+# Pin comfy-kitchen to a version compatible with the torch version in this image.
+# comfy-kitchen 0.2.28 added an na3d custom op using builtin list[int] annotations,
+# which torch < 2.7 cannot infer (torch 2.6.0 used by the cu124 images).
+if [ -n "${COMFY_KITCHEN_VERSION}" ]; then
+    pip3 install --no-cache-dir "comfy-kitchen==${COMFY_KITCHEN_VERSION}"
+fi
+
 # Install ComfyUI Custom Nodes
 git clone https://github.com/ltdrdata/ComfyUI-Manager.git custom_nodes/ComfyUI-Manager
 cd custom_nodes/ComfyUI-Manager

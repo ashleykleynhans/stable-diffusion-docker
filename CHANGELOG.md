@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [8.11.6] - 2026-08-08
 
+### Fixed
+
+- Fixed: ComfyUI crashing on startup with `Parameter kernel_size has unsupported type list[int]` from comfy-kitchen's na3d custom op. comfy-kitchen 0.2.28 (pinned by ComfyUI v0.31.0) uses builtin `list[int]` annotations, which torch 2.6.0 cannot infer. Pin comfy-kitchen to 0.2.27.
+
 ### Updated
 
 - Bump ComfyUI to version v0.31.0

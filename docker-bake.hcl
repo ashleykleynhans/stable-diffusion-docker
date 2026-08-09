@@ -52,6 +52,7 @@ target "default" {
         COMFYUI_VERSION = "v0.31.0"
         COMFYUI_TORCH_VERSION = "2.6.0+cu${CU_VERSION}"
         COMFYUI_XFORMERS_VERSION = "0.0.29.post3"
+        COMFY_KITCHEN_VERSION = "0.2.27"
 
         VENV_PATH = "/workspace/venvs/a1111"
     }
