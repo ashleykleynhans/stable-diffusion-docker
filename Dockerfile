@@ -35,7 +35,6 @@ FROM kohya-install AS comfyui-install
 ARG COMFYUI_VERSION
 ARG COMFYUI_TORCH_VERSION
 ARG COMFYUI_XFORMERS_VERSION
-ARG COMFY_KITCHEN_VERSION
 WORKDIR /
 COPY --chmod=755 build/install_comfyui.sh ./
 RUN /install_comfyui.sh && rm /install_comfyui.sh
