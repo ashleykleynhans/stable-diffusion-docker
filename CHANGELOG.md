@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Updated
 
-- Bump ComfyUI to version v0.34.9
+- Bump ComfyUI to version v0.34.0
 - Bump InvokeAI to version v6.14.0
 
 ## [8.11.8] - 2026-08-14
