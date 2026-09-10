@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [8.12.2] - 2026-09-10
 
+### Fixed
+
+- Fixed: Extend the cu124 torch 2.6.0 `comfy-kitchen` patch (first added in 8.11.6 for `na.py`'s `kernel_size: list[int]` / `is_causal: list[bool]`) to cover all modules. comfy-kitchen 0.2.33 (pinned by ComfyUI v0.35.0) adds `sol_attn` with `sink_blocks: list[int]` / `sink_q: list[int]` which hits the same `infer_schema` failure (`Parameter sink_blocks has unsupported type list[int]`) as the `na3d` op. Now patches every `.py` under `comfy_kitchen` that uses `list[int]` / `list[bool]` (and `list[float]` / `list[str]` for future-proofing) to use `typing.List[...]` instead, keeping the package version unchanged so ComfyUI's compatibility check stays happy. Only runs on torch < 2.7 images (cu124, torch 2.6.0); cu128 images (torch 2.7.1) handle builtin generics natively and are left unpatched.
+
 ### Updated
 
 - Bump ComfyUI to version v0.35.0
