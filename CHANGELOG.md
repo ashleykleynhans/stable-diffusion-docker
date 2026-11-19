@@ -4,6 +4,17 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.12.17] - 2026-11-19
+
+### Fixed
+
+- InvokeAI: pin torch to 2.7.1 and xformers to 0.0.31.post1 during installation.
+  Leaving them unpinned let pip resolve xformers 0.0.36, which requires
+  torch>=2.10 and the `mslk` package. `mslk` on PyPI is only an empty
+  placeholder, so `xformers.ops.memory_efficient_attention` became
+  unavailable and InvokeAI failed to start with
+  `AttributeError: ... mslk could not be imported: No module named 'mslk'`.
+
 ## [8.12.16] - 2026-11-18
 
 ### Updated

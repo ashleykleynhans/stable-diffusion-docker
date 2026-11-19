@@ -11,7 +11,7 @@ variable "APP" {
 }
 
 variable "RELEASE" {
-    default = "8.12.16"
+    default = "8.12.17"
 }
 
 variable "CU_VERSION" {
@@ -46,7 +46,7 @@ target "default" {
         KOHYA_XFORMERS_VERSION = "0.0.29.post3"
 
         INVOKEAI_VERSION = "6.14.4"
-        INVOKEAI_TORCH_VERSION = "2.7.1+cu${CU_VERSION}"
+        INVOKEAI_TORCH_VERSION = "2.7.1"
         INVOKEAI_XFORMERS_VERSION = "0.0.31.post1"
 
         COMFYUI_VERSION = "v0.46.0"
